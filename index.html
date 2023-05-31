@@ -47,11 +47,12 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     }
 
-     /* Media query para telas com largura de 412px */
-     @media (max-width: 600px) {
+     @media (max-width: 700px) {
       .container {
-        width: 100%;
+        height: 100vh;
         padding: 10px;
+        background-color: blue;
+        font-size:1.5rem
       }
     }
   </style>
@@ -59,7 +60,7 @@
 <body>
   <div class="container">
     <h1>Controle de Estoque</h1>
-    <button id="openButton" onclick="toggleStock()">Abrir meu Estoque</button>
+    <button id="openButton" onclick="toggleStock()">Lançar intes</button>
     <button onclick="showCurrentStock()">Ver meu Estoque Atual</button>
     <button onclick="clearStock()">Limpar Estoque</button>
     <button onclick="copyToClipboard()">Copy</button>
@@ -142,7 +143,7 @@
         populateStockInputs();
       } else {
         stockForm.style.display = "none";
-        openButton.innerText = "Abrir meu Estoque";
+        openButton.innerText = "ALançar intes";
       }
     }
 
