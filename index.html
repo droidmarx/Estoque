@@ -10,7 +10,7 @@
       padding: 20px;
     }
 
-    form{
+    form {
       padding: 10px;
       margin: 20px;
       text-align: left;
@@ -19,6 +19,7 @@
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
     }
+
     .form-field {
       margin-bottom: 10px;
     }
@@ -38,13 +39,20 @@
     }
 
     #stockDisplay {
-      padding: inherit;
       margin: 20px;
       text-align: left;
       font-size: 20px;
       background-color: #f7f7f7;
       border-radius: 10px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+
+     /* Media query para telas com largura de 412px */
+     @media (max-width: 600px) {
+      .container {
+        width: 100%;
+        padding: 10px;
+      }
     }
   </style>
 </head>
@@ -53,60 +61,61 @@
     <h1>Controle de Estoque</h1>
     <button id="openButton" onclick="toggleStock()">Abrir meu Estoque</button>
     <button onclick="showCurrentStock()">Ver meu Estoque Atual</button>
+    <button onclick="clearStock()">Limpar Estoque</button>
     <button onclick="copyToClipboard()">Copy</button>
 
     <form id="stockForm" style="display: none;">
       <div class="form-field">
-        <label for="Apc">Conector APC:</label>
+        <label for="apc">Conector APC:</label>
         <input type="number" id="apc" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Upc">Conector UPC:</label>
+        <label for="upc">Conector UPC:</label>
         <input type="number" id="upc" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Drop">Drop:</label>
+        <label for="drop">Drop:</label>
         <input type="number" id="drop" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Ax2">Ax2:</label>
+        <label for="ax2">Ax2:</label>
         <input type="number" id="ax2" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Onu">ONU:</label>
+        <label for="onu">ONU:</label>
         <input type="number" id="onu" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Fecho">Fecho:</label>
+        <label for="fecho">Fecho:</label>
         <input type="number" id="fecho" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Anel">Anel:</label>
+        <label for="anel">Anel:</label>
         <input type="number" id="anel" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Roldana">Roldana:</label>
+        <label for="roldana">Roldana:</label>
         <input type="number" id="roldana" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Fixa-fio">Fixa fio:</label>
-        <input type="number" id="fixa-fio" min="0" value="0" />
+        <label for="fixaFio">Fixa fio:</label>
+        <input type="number" id="fixaFio" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Cabo-rede">Cabo de Rede:</label>
-        <input type="number" id="cabo-rede" min="0" value="0" />
+        <label for="caboRede">Cabo de Rede:</label>
+        <input type="number" id="caboRede" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Conc-rj45">Conc. RJ45:</label>
-        <input type="number" id="conc-rj45" min="0" value="0" />
+        <label for="concRJ45">Conc. RJ45:</label>
+        <input type="number" id="concRJ45" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Esticador">Esticador:</label>
+        <label for="esticador">Esticador:</label>
         <input type="number" id="esticador" min="0" value="0" />
       </div>
       <div class="form-field">
-        <label for="Kit-fusao">Kit Fusão:</label>
-        <input type="number" id="kit-fusao" min="0" value="0" />
+        <label for="kitFusao">Kit Fusão:</label>
+        <input type="number" id="kitFusao" min="0" value="0" />
       </div>
       <button onclick="updateStock()">Enviar</button>
     </form>
@@ -114,53 +123,41 @@
   </div>
 
   <script>
-
-var stock = {
-      "Apc": 0,
-      "Upc": 0,
-      "Drop": 0,
-      "Ax2": 0,
-      "Onu": 0,
-      "Fecho": 0,
-      "Anel": 0,
-      "Roldana": 0,
-      "Fixa-fio": 0,
-      "Cabo-rede": 0,
-      "Conc-rj45": 0,
-      "Esticador": 0,
-      "Kit-fusao": 0
-    };
-
+    var stock = {};
+    
+    function clearStock() {
+      stock = {}; // Limpa o objeto de estoque
+      localStorage.removeItem("stock"); // Remove o estoque do Local
+      console.log("Estoque Removido do Local.");
+      alert("Estoque Removido do Local.");
+    }
 
     function toggleStock() {
-  var stockForm = document.getElementById("stockForm");
-  var openButton = document.getElementById("openButton");
+      var stockForm = document.getElementById("stockForm");
+      var openButton = document.getElementById("openButton");
 
-  if (stockForm.style.display === "none") {
-    stockForm.style.display = "block";
-    openButton.innerText = "Fechar meu Estoque";
-    populateStockInputs();
-  } else {
-    stockForm.style.display = "none";
-    openButton.innerText = "Abrir meu Estoque";
-  }
-}
-
-function populateStockInputs() {
-  var inputs = document.getElementsByTagName("input");
-
-  for (var i = 0; i < inputs.length; i++) {
-    var input = inputs[i];
-    var itemId = input.id;
-
-    if (stock.hasOwnProperty(itemId)) {
-      input.value = stock[itemId];
+      if (stockForm.style.display === "none") {
+        stockForm.style.display = "block";
+        openButton.innerText = "Fechar meu Estoque";
+        populateStockInputs();
+      } else {
+        stockForm.style.display = "none";
+        openButton.innerText = "Abrir meu Estoque";
+      }
     }
-  }
-}
 
+    function populateStockInputs() {
+      var inputs = document.getElementsByTagName("input");
 
-    
+      for (var i = 0; i < inputs.length; i++) {
+        var input = inputs[i];
+        var itemId = input.id;
+
+        if (stock.hasOwnProperty(itemId)) {
+          input.value = stock[itemId];
+        }
+      }
+    }
 
     function updateStock() {
       var inputs = document.getElementsByTagName("input");
@@ -171,7 +168,8 @@ function populateStockInputs() {
       }
 
       localStorage.setItem("stock", JSON.stringify(stock));
-      console.log("Estoque atualizado e armazenado no Local Storage.");
+      console.log("Estoque atualizado e armazenado no Local.");
+      alert("Estoque atualizado e armazenado no Local.");
     }
 
     function showCurrentStock() {
@@ -183,36 +181,37 @@ function populateStockInputs() {
         stockDisplay.innerText = "Estoque Atual:\n\n";
 
         for (var item in currentStock) {
-          stockDisplay.innerText += item + ": " + currentStock[item] + "\n";
+          if (currentStock.hasOwnProperty(item)) {
+            var formattedItem = item.charAt(0).toUpperCase() + item.slice(1);
+            stockDisplay.innerText += formattedItem + ": " + currentStock[item] + "\n";
+          }
         }
       } else {
-        stockDisplay.innerText = "Nenhum estoque Encontrado.";
+        stockDisplay.innerText = "Nenhum estoque encontrado.";
       }
     }
 
-    // Recupera o estoque do Local Storage, se existir
+    // Recupera o estoque do Local, se existir
     var savedStock = localStorage.getItem("stock");
     if (savedStock) {
       stock = JSON.parse(savedStock);
     }
 
     function copyToClipboard() {
-  var stockDisplay = document.getElementById("stockDisplay");
-  var stockText = stockDisplay.innerText;
+      var stockDisplay = document.getElementById("stockDisplay");
+      var stockText = stockDisplay.innerText;
 
-  navigator.clipboard.writeText(stockText)
-    .then(function() {
-      console.log("Estoque atual copiado para a área de transferência.");
-      alert("Estoque atual copiado para a área de transferência.");
-    })
-    .catch(function(error) {
-      console.error("Erro ao copiar o estoque para a área de transferência:", error);
-      alert("Erro ao copiar o estoque para a área de transferência.");
-    });
-}
-
-
-
+      navigator.clipboard.writeText(stockText)
+        .then(function() {
+          console.log("Estoque atual copiado para a área de transferência.");
+          alert("Estoque atual copiado para a área de transferência.");
+        })
+        .catch(function(error) {
+          console.error("Erro ao copiar o estoque: ", error);
+          alert("Erro ao copiar o estoque: ", error);
+        });
+    }
+    
   </script>
 </body>
 </html>
